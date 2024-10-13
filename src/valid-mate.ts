@@ -18,6 +18,7 @@ type Options = {
     typeMismatch: {
       email: string,
       url: string,
+      default: string,
     },
     patternMismatch: {
       email: string,
@@ -51,6 +52,7 @@ class ValidMate {
       typeMismatch: {
         email: 'Please enter a valid email address.',
         url: 'Please enter a URL.',
+        default: 'Please enter a valid value',
       },
       patternMismatch: {
         email: 'Please enter a valid email address.',
