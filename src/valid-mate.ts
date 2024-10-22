@@ -1,5 +1,6 @@
 import { bindThisToMemberFunctions } from "./utils/bind-this-to-member";
 import { makeUniqueId } from './utils/unique-id';
+import { merge } from 'lodash-es';
 
 type Error = {
   element: HTMLInputElement | HTMLSelectElement;
@@ -28,8 +29,22 @@ type Options = {
       date: string,
       time: string,
       month: string,
-      default: string
+      default: string,
     },
+    rangeOverflow: {
+      range: string,
+      number: string,
+      date: string,
+      time: string,
+      default: string,
+    },
+    rangeUnderflow: {
+      range: string,
+      number: string,
+      date: string,
+      time: string,
+      default: string,
+    }
   }
 }
 
@@ -50,30 +65,41 @@ class ValidMate {
         default: 'Please select a value',
       },
       typeMismatch: {
-        email: 'Please enter a valid email address.',
-        url: 'Please enter a URL.',
+        email: 'Please enter a valid email address',
+        url: 'Please enter a URL',
         default: 'Please enter a valid value',
       },
       patternMismatch: {
-        email: 'Please enter a valid email address.',
-        url: 'Please enter a URL.',
+        email: 'Please enter a valid email address',
+        url: 'Please enter a URL',
         number: 'Please enter a number',
         color: 'Please match the following format: #rrggbb',
         date: 'Please use the YYYY-MM-DD format',
         time: 'Please use the 24-hour time format. Ex. 23:00',
         month: 'Please use the YYYY-MM format',
-        default: 'Please match the requested format.'
+        default: 'Please match the requested format'
       },
+      rangeOverflow: {
+        range: 'The value must be less than or equal to the value',
+        number: 'The value must be less than or equal to the value',
+        date: 'The value must be less than or equal to the value',
+        time: 'The value must be less than or equal to the value',
+        default: 'The value must be less than or equal to the value'
+      },
+      rangeUnderflow: {
+        range: 'The value must be greater than or equal to the value',
+        number: 'The value must be greater than or equal to the value',
+        date: 'The value must be greater than or equal to the value',
+        time: 'The value must be greater than or equal to the value',
+        default: 'The value must be greater than or equal to the value'
+      }
     },
   }
 
   constructor(form: HTMLFormElement, options?: Options) {
     this.form = form;
     this.inputsToValidate = form.querySelectorAll('input, select, textarea');
-    this.options = {
-      ...this.options,
-      ...options
-    }
+    this.options = merge(this.options, options);
 
     bindThisToMemberFunctions(this);
 
@@ -145,6 +171,14 @@ class ValidMate {
 
     if (input.validity.patternMismatch) {
       return this.options.validationMessages.patternMismatch?.[inputType] || this.options.validationMessages.patternMismatch.default;  
+    }
+
+    if (input.validity.rangeOverflow) {
+      return this.options.validationMessages.rangeOverflow?.[inputType] || this.options.validationMessages.rangeOverflow.default;  
+    }
+
+    if (input.validity.rangeUnderflow) {
+      return this.options.validationMessages.rangeUnderflow?.[inputType] || this.options.validationMessages.rangeUnderflow.default;  
     }
 
     return 'There was an error.';

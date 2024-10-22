@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "happy-dom": "^9.10.9",
+    "lodash-es": "^4.17.21",
     "prettier": "^2.8.8"
   }
 }
