@@ -209,7 +209,7 @@ class ValidMate {
     });
   }
 
-  onFormSubmit(e: Event) {
+  private onFormSubmit(e: Event) {
     e.preventDefault();
 
     this.validateForm()
