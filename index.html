@@ -44,7 +44,20 @@
 
       <div class="form-item">
         <label for="job">What's your job?</label>
-        <select name="job" id="job">
+        <select name="job" id="job" required>
+          <option value="">Select a job</option>
+          <option value="Developer">Developer</option>
+          <option value="Builder">Builder</option>
+          <option value="Baker">Baker</option>
+          <option value="Nurse">Nurse</option>
+          <option value="Politician">Politician</option>
+        </select>
+      </div>
+
+      <div class="form-item">
+        <label for="job">What's your job?</label>
+        <select name="job" id="job" required multiple>
+          <option value="">Select a job</option>
           <option value="Developer">Developer</option>
           <option value="Builder">Builder</option>
           <option value="Baker">Baker</option>

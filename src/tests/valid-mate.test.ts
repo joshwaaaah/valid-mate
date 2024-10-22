@@ -97,25 +97,172 @@ describe('ValidMate', () => {
     expect(form.getAttribute('novalidate')).toBeTruthy();
   });
 
-  test('a custom error message should display if set when a required value is missing', () => {
-    document.body.innerHTML = `<form>
-      <label for="name">Name</label>
-      <input type="text" name="name" id="name" required>
-    </div>`;
-
-    const CUSTOM_ERROR_MESSAGE = 'A custom error message';
-    const form = document.querySelector('form');
-    const validation = new ValidMate(form, {
-      validationMessages: {
-        valueMissing: {
-          default: CUSTOM_ERROR_MESSAGE
-        },
-      }
+  describe('custom error messages', () => {
+    test('valueMissing: a custom error message should display if a required value is missing on a text input', () => {
+      document.body.innerHTML = `<form>
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" required>
+      </div>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          valueMissing: {
+            default: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
     });
 
-    validation.validateForm();
+    test('valueMissing: a custom error message should display if a required value is missing on a checkbox', () => {
+      document.body.innerHTML = `<form>
+        <label for="terms">Name</label>
+        <input type="checkbox" name="terms" id="terms" required>
+      </div>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          valueMissing: {
+            checkbox: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
 
-    expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    test('valueMissing: a custom error message should display if a required value is missing on a radio', () => {
+      document.body.innerHTML = `<form>
+        <label for="terms">Name</label>
+        <input type="radio" name="terms" id="terms" required>
+      </div>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          valueMissing: {
+            radio: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
+
+    test('valueMissing: a custom error message should display if a required value is missing on a select', () => {
+      document.body.innerHTML = `<form>
+        <label for="job">What's your job?</label>
+        <select name="job" id="job" required>
+          <option value="" selected>Select a job</option>
+          <option value="Developer">Developer</option>
+          <option value="Builder">Builder</option>
+          <option value="Baker">Baker</option>
+          <option value="Nurse">Nurse</option>
+          <option value="Politician">Politician</option>
+        </select>
+      </form>`;
+      
+      const select = document.querySelector('select') as unknown as HTMLSelectElement;
+      // `happy-dom` doesn't support setting the value of a select element to an empty string.
+      select.value = '';
+      const CUSTOM_ERROR_MESSAGE = 'Please select a country';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          valueMissing: {
+            'select-one': CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE);
+    });
+
+    test('valueMissing: a custom error message should display if a required value is missing on a multiple', () => {
+      document.body.innerHTML = `<form>
+        <label for="job">What's your job?</label>
+        <select name="job" id="job" required multiple>
+          <option value="" selected>Select a job</option>
+          <option value="Developer">Developer</option>
+          <option value="Builder">Builder</option>
+          <option value="Baker">Baker</option>
+          <option value="Nurse">Nurse</option>
+          <option value="Politician">Politician</option>
+        </select>
+      </form>`;
+      
+      const select = document.querySelector('select') as unknown as HTMLSelectElement;
+      // `happy-dom` doesn't support setting the value of a select element to an empty string.
+      select.value = '';
+      const CUSTOM_ERROR_MESSAGE = 'Please select a country';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          valueMissing: {
+            'select-multiple': CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE);
+    });
+
+    test('typeMismatch: a custom error message should display if an invalid email is entered', () => {
+      document.body.innerHTML = `<form>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" value="not-an-email">
+      </div>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          typeMismatch: {
+            email: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
+
+    test('typeMismatch: a custom error message should display if an invalid url is entered', () => {
+      document.body.innerHTML = `<form>
+        <label for="websote">Website</label>
+        <input type="url" name="url" id="url" value="not-a-url">
+      </div>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          typeMismatch: {
+            url: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
   });
-
 });

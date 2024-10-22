@@ -12,7 +12,7 @@ type Options = {
     valueMissing: {
       checkbox: string,
       radio: string,
-      select: string,
+      'select-one': string,
       'select-multiple': string,
       default: string
     },
@@ -60,7 +60,7 @@ class ValidMate {
       valueMissing: {
         checkbox: 'Please add a value for this checkbox',
         radio: 'Please add a value for this radio',
-        select: 'Please ensure a value is selected',
+        'select-one': 'Please ensure a value is selected',
         'select-multiple': 'Please ensure a value is selected',
         default: 'Please select a value',
       },
