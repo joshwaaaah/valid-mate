@@ -1,12 +1,18 @@
 import { HTMLFormElement, Window } from 'happy-dom';
-import { expect, test, describe } from 'vitest';
+import { expect, test, describe, beforeEach } from 'vitest';
 import { ValidMate } from '../valid-mate';
 
-describe('ValidMate', () => {
-  test('an ivalid `input` should return `false`', () => {
-    const window = new Window();
-    const document = window.document;
+let window = new Window();
+let document = window.document;
 
+describe('ValidMate', () => {
+
+  beforeEach(() => {
+    window = new Window();
+    document = window.document;
+  })
+
+  test('an ivalid `input` should return `false`', () => {
     document.body.innerHTML = `<form>
       <label for="name">Name</label>
       <input required name="name" id="name" value="">
@@ -20,9 +26,6 @@ describe('ValidMate', () => {
   });
 
   test('a valid `input` should return `true`', () => {
-    const window = new Window();
-    const document = window.document;
-
     document.body.innerHTML = `<form>
       <label for="name">Name</label>
       <input name="name" id="name" value="Lemonade">
@@ -36,9 +39,6 @@ describe('ValidMate', () => {
   });
 
   test('an invalid `input` should have an associated aria-describedby attribute', () => {
-    const window = new Window();
-    const document = window.document;
-
     document.body.innerHTML = `<form>
       <label for="name">Name</label>
       <input name="name" id="name" required value="">
@@ -53,9 +53,6 @@ describe('ValidMate', () => {
   });
 
   test('an invalid `input` should have an associated HTML element on the page', () => {
-    const window = new Window();
-    const document = window.document;
-
     document.body.innerHTML = `<form>
       <label for="name">Name</label>
       <input name="name" id="name" required value="">
@@ -71,9 +68,6 @@ describe('ValidMate', () => {
   });
 
   test('an invalid `input` should have an associated HTML element on the page if it has no ID', () => {
-    const window = new Window();
-    const document = window.document;
-
     document.body.innerHTML = `<form>
       <label>Name</label>
       <input name="name" required value="">
@@ -92,9 +86,6 @@ describe('ValidMate', () => {
   });
 
   test('a form to be validated should have the `novalidate` attribute', () => {
-    const window = new Window();
-    const document = window.document;
-
     document.body.innerHTML = `<form>
       <label for="name">Name</label>
       <input name="name" id="name" value="Lemonade">
@@ -107,25 +98,24 @@ describe('ValidMate', () => {
   });
 
   test('a custom error message should display if set when a required value is missing', () => {
-    const window = new Window();
-    const document = window.document;
-
     document.body.innerHTML = `<form>
       <label for="name">Name</label>
-      <input name="name" id="name" required value="">
+      <input type="text" name="name" id="name" required>
     </div>`;
 
+    const CUSTOM_ERROR_MESSAGE = 'A custom error message';
     const form = document.querySelector('form');
-    new ValidMate(form, {
+    const validation = new ValidMate(form, {
       validationMessages: {
-        missingValue: {
-          checkbox: 'This field is required.',
-          radio: 'Please select a value.',
-          select: 'Please select a value.',
-          'select-multiple': 'Please select at least one value.',
-          default: 'Please fill out this field.'
+        valueMissing: {
+          default: CUSTOM_ERROR_MESSAGE
         },
       }
     });
-  })
+
+    validation.validateForm();
+
+    expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+  });
+
 });
