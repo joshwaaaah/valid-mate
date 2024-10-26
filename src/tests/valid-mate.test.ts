@@ -10,6 +10,7 @@ describe('ValidMate', () => {
   beforeEach(() => {
     window = new Window();
     document = window.document;
+    document.body.innerHTML = '';
   })
 
   test('an ivalid `input` should return `false`', () => {
@@ -260,6 +261,111 @@ describe('ValidMate', () => {
         }
       });
   
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
+
+    test('patternMismatch: a custom error message should display if an invalid email pattern is entered', () => {
+      document.body.innerHTML = `
+      <form>
+        <input type="email" pattern="\d{4,4}" value="info@test.com">
+      </form>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          patternMismatch: {
+            email: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
+
+    test('patternMismatch: a custom error message should display if an invalid url pattern is entered', () => {
+      document.body.innerHTML = `
+      <form>
+        <input type="url" pattern="\d{4,4}" value="https://www.google.com">
+      </form>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          patternMismatch: {
+            url: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+  
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
+
+    test('patternMismatch: a custom error message should display if an invalid tel pattern is entered', () => {
+      document.body.innerHTML = `
+      <form>
+        <input type="tel" pattern="\\d{4,4}" value="1">
+      </form>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          patternMismatch: {
+            tel: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
+
+    test('patternMismatch: a custom error message should display if an invalid search pattern is entered', () => {
+      document.body.innerHTML = `
+      <form>
+        <input type="search" pattern="\\d{4,4}" value="1">
+      </form>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          patternMismatch: {
+            search: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
+
+    test('patternMismatch: a custom error message should display if an invalid password pattern is entered', () => {
+      document.body.innerHTML = `
+      <form>
+        <input type="password" pattern="\\d{4,4}" value="1">
+      </form>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          patternMismatch: {
+            password: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+
       validation.validateForm();
   
       expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)

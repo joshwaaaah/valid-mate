@@ -24,11 +24,9 @@ type Options = {
     patternMismatch: {
       email: string,
       url: string,
-      number: string,
-      color: string,
-      date: string,
-      time: string,
-      month: string,
+      tel: string,
+      search: string,
+      password: string,
       default: string,
     },
     rangeOverflow: {
@@ -72,11 +70,9 @@ class ValidMate {
       patternMismatch: {
         email: 'Please enter a valid email address',
         url: 'Please enter a URL',
-        number: 'Please enter a number',
-        color: 'Please match the following format: #rrggbb',
-        date: 'Please use the YYYY-MM-DD format',
-        time: 'Please use the 24-hour time format. Ex. 23:00',
-        month: 'Please use the YYYY-MM format',
+        tel: 'Please match requested format',
+        password: 'Please match the requested format',
+        search: 'Please match the requested format',
         default: 'Please match the requested format'
       },
       rangeOverflow: {
