@@ -46,6 +46,12 @@ type Options = {
   }
 }
 
+type CustomValidator = {
+  name: string;
+  validate: (input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) => boolean;
+  message: string;
+}
+
 class ValidMate {
   inputsToValidate: NodeListOf<HTMLInputElement | HTMLSelectElement>;
 
@@ -91,6 +97,8 @@ class ValidMate {
       }
     },
   }
+
+  customValidators: Array<CustomValidator> = [];
 
   constructor(form: HTMLFormElement, options?: Options) {
     this.form = form;
@@ -180,14 +188,54 @@ class ValidMate {
     return 'There was an error.';
   }
 
+  doesInputHaveCustomValidation(input: HTMLInputElement | HTMLSelectElement): boolean {
+    if(input.getAttribute('data-valid-mate-validator')) {
+      return true;
+    }
+
+    return false;
+  }
+
+  getCustomValidatorsForInput(input: HTMLInputElement | HTMLSelectElement): Array<CustomValidator> {
+    const validators = this.customValidators.filter(validator => validator.name === input.getAttribute('data-valid-mate-validator'));
+
+    return validators;
+  }
+
+  isInputValid(input: HTMLInputElement | HTMLSelectElement): { valid: boolean, message: string } {
+    if(this.doesInputHaveCustomValidation(input)) {
+      const validators = this.getCustomValidatorsForInput(input);
+
+      for (const validator of validators) {
+        if (!validator.validate(input)) {
+          return {
+            valid: false,
+            message: validator.message
+          };
+        }
+      }
+
+      return {
+        valid: true,
+        message: ''
+      };
+      
+    } else {
+      return {
+        valid: input.checkValidity(),
+        message: this.getValidationMessageForInput(input),
+      }
+    }
+  }
+
   validateInput(input: HTMLInputElement | HTMLSelectElement): boolean {
-    const valid = input.checkValidity();
+    const { valid, message } = this.isInputValid(input);
 
     if (valid) return true;
 
     const error: Error = {
       element: input,
-      message: this.getValidationMessageForInput(input),
+      message,
     };
 
     this.errors.push(error);
@@ -203,6 +251,10 @@ class ValidMate {
     this.inputsToValidate.forEach((input) => {
       this.validateInput(input);
     });
+  }
+
+  addCustomValidator(validator: CustomValidator) {
+    this.customValidators.push(validator);
   }
 
   private onFormSubmit(e: Event) {

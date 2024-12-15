@@ -392,4 +392,44 @@ describe('ValidMate', () => {
       expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
     });
   });
+
+  describe('custom validators', () => {
+    test('a custom validator should validate the input', () => {
+      document.body.innerHTML = `<form>
+        <input type="date" data-valid-mate-validator="date-validator">
+      </form>`;
+
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form);
+      validation.addCustomValidator({
+        name: 'date-validator',
+        validate: (input) => {
+          return new Date(input.value) > new Date('2026-10-10');
+        },
+        message: 'Wowzer, something went wrong'
+      })
+
+      expect(validation.validateForm()).toBeFalsy();
+    });
+
+    test('a custom validator should show a custom error message if the input is invalid', () => {
+      document.body.innerHTML = `<form>
+        <input type="date" data-valid-mate-validator="date-validator">
+      </form>`;
+
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form);
+      validation.addCustomValidator({
+        name: 'date-validator',
+        validate: (input) => {
+          return new Date(input.value) > new Date('2026-10-10');
+        },
+        message: 'Wowzer, something went wrong'
+      })
+
+      validation.validateForm();
+
+      expect(document.documentElement.innerText).toContain('Wowzer, something went wrong');
+    });
+  });
 });
