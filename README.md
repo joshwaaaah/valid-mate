@@ -26,7 +26,7 @@ const validation = new ValidMate(form);
 ### `validateForm()`
 Validates all inputs in the form. Shows error messages for any invalid inputs.
 
-### `validateInput(input: HTMLInputElement | HTMLSelectElement): boolean`
+### `validateInput(input: HTMLInputElement | HTMLSelectElement): { valid: boolean, message: string }`
 Validates a single input element. Shows an error message if invalid.
 Returns `true` if valid, `false` if invalid.
 
