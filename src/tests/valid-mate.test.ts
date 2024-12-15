@@ -370,5 +370,26 @@ describe('ValidMate', () => {
   
       expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
     });
+
+    test('rangeUnderflow: a custom error message should display if number is less than min', () => {
+      document.body.innerHTML = `
+      <form>
+        <input type="number" min="2" value="1">
+      </form>`;
+  
+      const CUSTOM_ERROR_MESSAGE = 'A custom error message';
+      const form = document.querySelector('form');
+      const validation = new ValidMate(form, {
+        validationMessages: {
+          rangeUnderflow: {
+            number: CUSTOM_ERROR_MESSAGE
+          },
+        }
+      });
+
+      validation.validateForm();
+  
+      expect(document.documentElement.innerText).toContain(CUSTOM_ERROR_MESSAGE)
+    });
   });
 });
